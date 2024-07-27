@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "discord.js": "^14.6.0",
     "puppeteer": "^19.2.0",

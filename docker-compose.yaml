@@ -1,0 +1,8 @@
+services:
+  bot:
+    image: imperialplugins/status_bot
+    container_name: "status_bot"
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
