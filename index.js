@@ -5,18 +5,10 @@ const { Client, GatewayIntentBits, EmbedBuilder, DiscordAPIError } = require('di
 const puppeteer = require('puppeteer-extra');
 
 //LANGUAGE STRINGS
-if(lang==="fr"){
-    statusembeddesc="__Légende :__\n<:UP:1036089511064653854> Serveur en ligne\n<:MAINTENANCE:1036089510032838706>: Server en maintenance\n<:DOWN:1036089508187349073>: Serveur hors ligne"
-    initembeddesc="Salut ! Je viens juste de remarquer que vous n'avez pas configuré l'id du message dans le fichier de configuration. Vous devez donc copier l'id de ce message et le coller dans la config."
-    messagedeleted="Euh... Vous venez de supprimer le message de statut :C. Je vais donc m'arrêter de force pour que vous puissiez me reconfigurer ;)"
-    nextupdate="Prochaine mise à jour "
-}
-else if(lang==="en"){
-    statusembeddesc="__Legend:__\n<:UP:1036089511064653854>: Server is up\n<:MAINTENANCE:1036089510032838706>: Server is on maintenance\n<:DOWN:1036089508187349073>: Server is down"
+ statusembeddesc=""
     initembeddesc="Hi! I just noticed that you have not set the message id in the configuration file. So I'm sending this message for you to copy the id of the message and paste it into the config."
     messagedeleted="Huuum... You deleted my status message :C. So I'm going to force myself to stop so that you can reconfigure me ;)"
     nextupdate="Next update "
-}
 
 //UPDATE FUNCTION
 async function updatestatus(){
@@ -28,8 +20,7 @@ async function updatestatus(){
         .setColor(0x555555)
         .setTitle(statusname)
         .setURL(hetrixlink)
-        .setAuthor({ name: statusname, iconURL: client.guilds.cache.get(guildid).iconURL({ dynamic: true }), url: hetrixlink })
-        .setDescription(statusembeddesc)    
+        .setAuthor({ name: servicename, iconURL: client.guilds.cache.get(guildid).iconURL({ dynamic: true }), url: hetrixlink })
         .setImage('attachment://screen.png')
         .setTimestamp()
     time=Math.floor(Date.now() / 1000)+updateinterval+9
@@ -43,7 +34,7 @@ async function updatestatus(){
 async function hetrixscreen(){
 
     try {
-        puppeteer.launch({ headless: true, executablePath: chromepath}).then(async browser => {
+        puppeteer.launch({ headless: true, executablePath: chromepath,  args: ['--no-sandbox', '--disable-setuid-sandbox']}).then(async browser => {
             const page = await browser.newPage()
             await page.setViewport({ width: 1280, height: 720 })
         
@@ -81,7 +72,6 @@ client.on("ready", async () => {
             .setTitle(statusname)
             .setURL(hetrixlink)
             .setAuthor({ name: statusname, iconURL: client.guilds.cache.get(guildid).iconURL({ dynamic: true }), url: hetrixlink })
-            .setDescription(initembeddesc)
             await client.channels.cache.get(channelid).send({ embeds: [initembed] });
         console.log("You have to restart the bot if you have updated the config.json file.")
     }
